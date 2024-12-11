@@ -268,16 +268,16 @@ legendlab2 = {sprintf('z = %.2f', vGridz(1)), sprintf('z = %.2f', vGridz(7))};
 figure; 
 
 subplot(1, 2, 1);
-plot(vGrida1, mVF, 'LineWidth', 1.1);
+plot(vGrida1, mVF, 'LineWidth', .8);
 ylabel('V(a,z)');
 xlabel('assets');
 legend(legendlab1, 'Location', 'southeast')
 grid on;
 
 subplot(1, 2, 2);
-plot(vGrida2, mPolaprime2(:, 1), 'LineWidth', 1.1)
+plot(vGrida2, mPolaprime2(:, 1), 'LineWidth', .8)
 hold on;
-plot(vGrida2, mPolaprime2(:, 7), 'Linewidth', 1.1);
+plot(vGrida2, mPolaprime2(:, 7), 'Linewidth', .8);
 hold off;
 ylabel("Policy Rule (g(a,z) = a')");
 xlabel("assets");
