@@ -11,7 +11,7 @@
 %       aprime: (scalar) minimizer of objective function
 %
 function [aprime] = fnOptaprime(funopts, lb, ub)
-    [beta, budget, grid, Ngrid, expvf] = deal(funopts{:});
-    options = optimset('Display', 'off', 'MaxIter', 2000, 'tolX', 1e-10);
+    [beta, budget, grid, Ngrid, expvf] = deal(funopts{:}); % unpack obj function options
+    options = optimset('Display', 'off', 'MaxIter', 2000, 'tolX', 1e-12, 'TolFun', 1e-12, 'MaxFunEvals', 20000);
     [aprime, ~] = fminbnd((@(x) fnHHobj(x, beta, budget, grid, Ngrid, expvf)), lb, ub, options);
 end
