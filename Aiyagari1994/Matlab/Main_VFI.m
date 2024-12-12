@@ -5,8 +5,8 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% This file computes a stationary RE-RCE using VFI + Howard Improvement
-% with interpolated search + Howard Improvement
+% This file computes a stationary RE-RCE using VFI with Interpolated 
+% search + Howard Improvement
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -63,7 +63,7 @@ convergedVF = false;
 
 %% Define Grids 
 
-% wealth - coarsed grid (Maliar, Maliar, and Valli, 2010)
+% wealth - coarsed grid (Maliar, Maliar and Valli, 2010)
 x1 = linspace(0, 0.5, pNa1);
 x2 = linspace(0, 0.5, pNa2);
 y1 = x1.^pCurve / max(x1.^pCurve);
@@ -124,7 +124,6 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
                 % ----- VFI w/ Interpolated Policy Function ----- %
         
                 if iterVF <= 30 || mod(iterVF, 20) == 0
-                    
                     a = vGrida1(ia);
                     budget = w*z + (1+r)*a; 
                     lb = minWealth;
@@ -134,7 +133,7 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
     
                     [LB, UB, wtLB, wtUB] = fnInterp1dGrid(aprime, vGrida1, pNa1);
                     value = wtLB*expVF(LB) + wtUB*expVF(UB); % interpolate E[V]
-
+                    
                     % updating
                     mVFnew(ia, iz) = log(c) + pBeta * value;
                     mPolaprime1(ia, iz) = aprime;
@@ -143,13 +142,12 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
                 
                 % ----- VFI w/ Accelerated Howard Improvement ----- % 
                 
-                else
-    
+                else    
                     aprime = mPolaprime1(ia, iz);
                     c = mPolc(ia, iz);
                     [LB, UB, wtLB, wtUB] = fnInterp1dGrid(aprime, vGrida1, pNa1);
                     value = wtLB*expVF(LB) + wtUB*expVF(UB); 
-
+                    
                     % updating
                     mVFnew(ia, iz) = log(c) + pBeta * value;
                 end
@@ -180,16 +178,15 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
     errDist = 20;
     iterDist = 1;
     while errDist > pTolDist
-        
+
         mNewDist = zeros(size(mCurrDist)); % reset distribution to incremeentally increase mass over states (ia,iz)
 
         for iz = 1:pNz
-            for ia = 1:pNa2
-    
+            for ia = 1:pNa2    
                 aprime = mPolaprime2(ia, iz);
                 [L, H, wtL, wtH] = fnInterp1dGrid(aprime, vGrida2, pNa2);
                 mass = mCurrDist(ia, iz);
-
+                
                 % updating
                 for iznext = 1:pNz
                     mNewDist(L, iznext) = mNewDist(L, iznext) ...
@@ -217,7 +214,7 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
     vMarginalDista = sum(mCurrDist, 2); % (marginal) density over asset-grid
     Kmcc = vGrida2 * vMarginalDista; % capital market clearing condition
     errGE = abs(Kmcc - aggK);
-    
+
     % updating
     aggKnew = pWtOldK*aggK + (1-pWtOldK)*Kmcc; % smooth updating     
     aggK = aggKnew; 
@@ -234,7 +231,6 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
         fprintf('r: %.4f, w: %.4f\n', r, w);
         fprintf('----------------------------------------------------\n')
     end
-
     iterGE = iterGE + 1;
 end
 
