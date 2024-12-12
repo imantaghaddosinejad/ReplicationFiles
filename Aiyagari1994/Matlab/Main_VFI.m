@@ -6,6 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % This file computes a stationary RE-RCE using VFI + Howard Improvement
+% with interpolated search + Howard Improvement
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -21,6 +22,7 @@
 % 4. Compute staitonary distribution using non-stochastic itarative method
 % 5. update price(s)/Aggregate(s)
 % 6. Check convergence, if not repeat steps 3-6.
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Housekeeping 
 clear 
@@ -61,7 +63,7 @@ convergedVF = false;
 
 %% Define Grids 
 
-% wealth 
+% wealth - coarsed grid (Maliar, Maliar, and Valli, 2010)
 x1 = linspace(0, 0.5, pNa1);
 x2 = linspace(0, 0.5, pNa2);
 y1 = x1.^pCurve / max(x1.^pCurve);
