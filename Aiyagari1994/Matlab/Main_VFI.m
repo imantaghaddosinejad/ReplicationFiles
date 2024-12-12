@@ -173,9 +173,9 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
     % interpolate aprime policy function onto a finer grid 
     mPolaprime2 = interp1(vGrida1, mPolaprime1, vGrida2, 'linear', 'extrap');
     %mPolaprime2 = zeros(size(mCurrDist));
-    for iz = 1:pNz
-        mPolaprime2(:, iz) = interp1(vGrida1, mPolaprime1(:, iz), vGrida2, "linear", "extrap");
-    end
+    %for iz = 1:pNz
+    %    mPolaprime2(:, iz) = interp1(vGrida1, mPolaprime1(:, iz), vGrida2, "linear", "extrap");
+    %end
 
     errDist = 20;
     iterDist = 1;
@@ -189,7 +189,8 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
                 aprime = mPolaprime2(ia, iz);
                 [L, H, wtL, wtH] = fnInterp1dGrid(aprime, vGrida2, pNa2);
                 mass = mCurrDist(ia, iz);
-    
+
+                % updating
                 for iznext = 1:pNz
                     mNewDist(L, iznext) = mNewDist(L, iznext) ...
                         + mPz(iz, iznext) * mass * wtL;
@@ -215,11 +216,11 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
     
     vMarginalDista = sum(mCurrDist, 2); % (marginal) density over asset-grid
     Kmcc = vGrida2 * vMarginalDista; % capital market clearing condition
-    
     errGE = abs(Kmcc - aggK);
+    
+    % updating
     aggKnew = pWtOldK*aggK + (1-pWtOldK)*Kmcc; % smooth updating     
     aggK = aggKnew; 
-
     timer = toc;
 
     % --------------------------------------------------- %
