@@ -134,7 +134,8 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
     
                     [LB, UB, wtLB, wtUB] = fnInterp1dGrid(aprime, vGrida1, pNa1);
                     value = wtLB*expVF(LB) + wtUB*expVF(UB); % interpolate E[V]
-    
+
+                    % updating
                     mVFnew(ia, iz) = log(c) + pBeta * value;
                     mPolaprime1(ia, iz) = aprime;
                     mPolc(ia, iz) = c;
@@ -148,9 +149,9 @@ while errGE > pTolGE && iterGE <= pMaxGEiter
                     c = mPolc(ia, iz);
                     [LB, UB, wtLB, wtUB] = fnInterp1dGrid(aprime, vGrida1, pNa1);
                     value = wtLB*expVF(LB) + wtUB*expVF(UB); 
-                    
+
+                    % updating
                     mVFnew(ia, iz) = log(c) + pBeta * value;
-    
                 end
             end
         end
