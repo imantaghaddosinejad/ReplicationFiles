@@ -120,6 +120,7 @@ idisp_outer = 100;
 %idisp_inner = 2500;
 merror = {};
 error_window = 500;
+results = struct();
 tic;
 while err1 > tol_ge 
 
@@ -320,22 +321,18 @@ while err1 > tol_ge
         plot(merror_array(end-9999:end)); grid on; ylabel('GE Error'); xlabel('Last 10,000 iterations'); drawnow; 
     end
     iter1 = iter1 + 1;
+
+    % Save Progress 
+    results.wt_schedule1 = WtOld1_schedule;
+    results.wt_schedule2 = WtOld3_schedule;
+    results.K = K; results.L=L; results.w=w; results.r=r;
+    results.err1=err1; results.iter1=iter1; results.timer=timer3;
+    results.merror=merror; results.iwt=iwt;
+    results.mPolapirime=mPolaprime; results.mPoln=mPoln; results.mPolc=mPolc; results.mLambda=mLambda;    
+    save(".\results.mat", 'results')
 end
 
-
-%% 
-
-results1 = struct();
-results1.wt_schedule1 = WtOld1_schedule;
-results1.wt_schedule2 = WtOld3_schedule;
-results1.K = K;results1.L=L;results1.w=w;results1.r=r;
-results1.err1=err1;results1.iter1=iter1;results1.timer=timer3;
-results1.merror=merror;results1.iwt=iwt;
-results1.mPolapirime=mPolaprime;results1.mPoln=mPoln;results1.mPolc=mPolc;results1.mLambda=mLambda;
-
-save(".\results1.mat", 'results1')
-
-%%
+%% Compute VF
 
 mU = log(mPolc) - (peta/(1+1/pfrisch)).*mPoln.^(1+1/pfrisch);
 mV = zeros(size(mU));
@@ -348,6 +345,14 @@ while err_vfi > 1e-10
     mV=mVnew;
 end
 
+%% Savings Rate and Wealth 
+mWealthChange = mPolaprime-vGrida';
+mNetIncome = r.*vGrida' + w.*vGridz'.*mPoln;
+mSavingsRate = mWealthChange./mNetIncome;
+mAvgSavingsRate = sum(mSavingsRate.*mCurrDist,2);
+
+%% Figures 
+
 figure;
 plot(vGrida, mCurrDist);grid on;
 
@@ -359,23 +364,3 @@ plot(vGrida, mV); grid on;
 
 figure;
 plot(vGrida, sum(mCurrDist,2)); grid on;
-
-[meshA, meshZ] = ndgrid(vGrida(1:87), vGridz');
-surf(meshA,meshZ,mCurrDist(1:87,:));
-xlabel('Assets (a)');
-ylabel('Productivity (z)');
-zlabel('PDF Density');
-title('3D Distribution of PDF over (a, z)');
-colorbar;           % Show color scale
-view(135, 30);      % Adjust 3D viewing angle
-
-
-err_array = cell2mat(merror);
-plot(err_array); grid on;xlim([500 20000]); 
-ylim([-1e-5, 2.6e-4]);yline(1e-8,'r-')
-
-% savings rate and wealth 
-mWealthChange = mPolaprime-vGrida';
-mNetIncome = r.*vGrida' + w.*vGridz'.*mPoln;
-mSavingsRate = mWealthChange./mNetIncome;
-mAvgSavingsRate = sum(mSavingsRate.*mCurrDist,2);
