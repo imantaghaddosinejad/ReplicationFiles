@@ -40,7 +40,7 @@ p.Delta     = 0.080;
 p.Rhoz      = 0.90;
 p.Sigmaz    = 0.2 * sqrt(1 - p.Rhoz^2);
 p.Nz        = 7;
-p.Mina      = 1e-20;
+p.Mina      = 0;
 p.Maxa      = 300;
 p.Na        = 100;
 p.Curve     = 7;
@@ -70,7 +70,7 @@ A           = 1.0;
 mPolc_new   = zeros(p.Na,p.Nz);
 
 % initial guess 
-K           = 11;
+K           = 7;
 L           = vGridz' * vDistz;
 r           = palpha*A*(K/L)^(palpha-1) - pdelta;
 w           = (1-palpha)*A*(K/L)^palpha;
@@ -282,3 +282,7 @@ saveas(gcf,'./Figures/Model_Results.png');
 figure;
 plot(vGrida(2:end), mps_adj,'LineWidth',1);grid on;xlabel('x');title('MPS (relative to wealth)'); xlim([0 120]);legend('z1','z2','z3','z4','z5','z6','z7');
 saveas(gcf,'./Figures/MPS.png')
+
+figure;
+plot(err_array(end-850:end),'LineWidth',1); grid on;xlabel('last 850 iteraitons');title('error (K)')
+saveas(gcf,'./Figures/error_gr_path.png')
